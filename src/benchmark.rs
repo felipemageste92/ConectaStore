@@ -1,9 +1,12 @@
+//! Geração de dados sintéticos e medição de desempenho do projeto.
+
 use crate::error::Result;
 use crate::models::{NodeId, RelationType};
 use crate::recommendation::{RecommendationConfig, RecommendationEngine};
 use crate::repository::StoreRepository;
 use std::time::{Duration, Instant};
 
+/// Reúne os volumes e tempos observados em uma execução do benchmark.
 #[derive(Debug)]
 pub struct BenchmarkReport {
     pub clients: usize,
@@ -16,15 +19,19 @@ pub struct BenchmarkReport {
     pub candidates_found: usize,
 }
 
+/// Constrói sempre o mesmo grafo para um determinado número de produtos.
 pub fn generate_synthetic_graph(products: usize) -> Result<StoreRepository> {
+    // Define volumes proporcionais, garantindo ao menos clientes e uma categoria.
     let clients = (products / 10).max(10);
     let categories = (products / 100).max(1);
     let mut repository = StoreRepository::new();
 
+    // Etapa 1: cadastra as categorias disponíveis.
     for category in 1..=categories {
         repository.add_category(category as u64, format!("Categoria {category}"))?;
     }
 
+    // Etapa 2: cadastra produtos, categorias e similaridade com o item anterior.
     for product in 1..=products {
         let product_id = product as u64;
         let category_id = ((product - 1) % categories + 1) as u64;
@@ -45,6 +52,7 @@ pub fn generate_synthetic_graph(products: usize) -> Result<StoreRepository> {
         }
     }
 
+    // Etapa 3: cadastra clientes e três comportamentos reproduzíveis por cliente.
     for client in 1..=clients {
         let client_id = client as u64;
         repository.add_client(client_id, format!("Cliente {client}"))?;
@@ -75,17 +83,21 @@ pub fn generate_synthetic_graph(products: usize) -> Result<StoreRepository> {
     Ok(repository)
 }
 
+/// Mede separadamente a construção, uma consulta direta e uma recomendação.
 pub fn measure_scenario(products: usize) -> Result<BenchmarkReport> {
+    // Cronometra a criação de todos os vértices e arestas.
     let build_start = Instant::now();
     let repository = generate_synthetic_graph(products)?;
     let build_time = build_start.elapsed();
 
+    // Cronometra a busca direta pelo último produto criado.
     let query_id = products.max(1) as u64;
     let query_start = Instant::now();
     let product = repository.product(query_id)?;
     std::hint::black_box(product);
     let query_time = query_start.elapsed();
 
+    // Cronometra uma busca de recomendações a partir do primeiro cliente.
     let recommendation_start = Instant::now();
     let engine = RecommendationEngine::new(repository.graph());
     let recommendations = engine.for_client(
@@ -99,6 +111,7 @@ pub fn measure_scenario(products: usize) -> Result<BenchmarkReport> {
     std::hint::black_box(&recommendations);
     let recommendation_time = recommendation_start.elapsed();
 
+    // Consolida os contadores e durações em um relatório único.
     Ok(BenchmarkReport {
         clients: (products / 10).max(10),
         products,
@@ -111,6 +124,7 @@ pub fn measure_scenario(products: usize) -> Result<BenchmarkReport> {
     })
 }
 
+/// Nome alternativo mantido como ponto de entrada público do benchmark.
 pub fn run_benchmark(products: usize) -> Result<BenchmarkReport> {
     measure_scenario(products)
 }
@@ -120,6 +134,7 @@ mod tests {
     use super::*;
 
     #[test]
+    // O gerador determinístico deve repetir volumes e conteúdo para a mesma entrada.
     fn gerador_produz_volume_e_relacoes_reproduziveis() -> Result<()> {
         let first = generate_synthetic_graph(100)?;
         let second = generate_synthetic_graph(100)?;

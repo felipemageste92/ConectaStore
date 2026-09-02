@@ -1,7 +1,10 @@
+//! Erros de domínio compartilhados por todas as camadas do projeto.
+
 use crate::models::NodeId;
 use std::error::Error;
 use std::fmt;
 
+/// Enumera as falhas esperadas ao manipular o grafo e as recomendações.
 #[derive(Debug, Clone, PartialEq)]
 pub enum ConectaStoreError {
     NodeAlreadyExists(NodeId),
@@ -14,6 +17,7 @@ pub enum ConectaStoreError {
 }
 
 impl fmt::Display for ConectaStoreError {
+    /// Traduz cada variante em uma mensagem compreensível para o usuário.
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             Self::NodeAlreadyExists(id) => write!(f, "vertice ja cadastrado: {id}"),
@@ -29,6 +33,8 @@ impl fmt::Display for ConectaStoreError {
     }
 }
 
+// Permite que o erro seja usado pelas APIs padrão de tratamento de erros do Rust.
 impl Error for ConectaStoreError {}
 
+/// Atalho para que as funções do projeto não precisem repetir o tipo de erro.
 pub type Result<T> = std::result::Result<T, ConectaStoreError>;
