@@ -1,0 +1,11 @@
+/target/
+.vscode/
+.vs/
+.env
+.env.*
+*.log
+*.tmp
+*.bak
+Thumbs.db
+Desktop.ini
+.DS_Store
