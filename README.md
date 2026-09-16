@@ -124,7 +124,7 @@ megastore/
 └── README.md
 ```
 
-O diretório `target/` é gerado pelo Cargo durante a compilação e não foiversionado.
+O diretório `target/` é gerado pelo Cargo durante a compilação e não deve ser versionado.
 
 ## Modelagem do grafo
 
