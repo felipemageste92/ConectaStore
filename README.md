@@ -307,13 +307,15 @@ O gerador cria cenários sintéticos determinísticos. A medição separa:
 ### Resultados obtidos
 
 | Produtos | Vértices | Arestas | Candidatos | Construção (ms) | Consulta (µs) | Recomendação (ms) |
-| -------: | -------: | ------: | ---------: | --------------: | ------------: | ----------------: |
-|      100 |      111 |     229 |         99 |           0,149 |         0,000 |             0,068 |
-|    1.000 |    1.110 |   2.299 |        210 |           0,974 |         0,000 |             0,112 |
-|   10.000 |   11.100 |  22.999 |        312 |          11,011 |         0,100 |             0,210 |
-|  100.000 |  111.000 | 229.999 |        310 |         170,179 |         0,200 |             0,394 |
+| --------: | -------: | ------: | ---------: | --------------: | ------------: | ----------------: |
+| 100       | 111      | 229     | 99         | 0,146           | 0,100         | 0,073             |
+| 1.000     | 1.110    | 2.299   | 210        | 0,894           | 0,100         | 0,078             |
+| 10.000    | 11.100   | 22.999  | 312        | 10,151          | 0,100         | 0,345             |
+| 100.000   | 111.000  | 229.999 | 310        | 180,447         | 0,200         | 0,358             |
 
-Esses valores correspondem a uma execução observada e podem variar conforme processador, sistema operacional, carga da máquina e versão do compilador. Os valores `0,000 µs` indicam que o tempo ficou abaixo da resolução apresentada, e não que a operação tenha custo literalmente nulo.
+No maior cenário, com 100.000 produtos, a construção do grafo levou **180,447 ms**, a consulta por ID levou **0,200 µs** e a recomendação levou **0,358 ms**.
+
+Esses valores correspondem à execução apresentada no vídeo e podem variar conforme o computador, o sistema operacional e a carga da máquina.
 
 O experimento demonstra crescimento do tempo de construção à medida que vértices e arestas aumentam. Nos cenários medidos, a consulta por identificador e a recomendação permaneceram curtas, mas os números não constituem um benchmark científico: não foram registradas múltiplas repetições, dispersão estatística ou consumo de memória.
 

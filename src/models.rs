@@ -106,3 +106,4 @@ pub struct Edge {
     pub relation: RelationType,
     pub weight: f64,
 }
+

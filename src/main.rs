@@ -140,3 +140,5 @@ fn print_recommendations(recommendations: &[megastore::Recommendation]) {
         );
     }
 }
+
+
