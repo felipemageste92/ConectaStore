@@ -60,13 +60,13 @@ O projeto não possui dependências externas no arquivo `Cargo.toml`.
 
 ## Estruturas de dados
 
-| Estrutura | Uso no projeto | Justificativa |
-|---|---|---|
-| `HashMap` | armazenamento dos vértices, listas de adjacência e candidatos | permite acesso médio próximo de `O(1)` por identificador |
-| `Vec<Edge>` | lista de arestas de cada vértice | é adequada para percorrer sequencialmente os vizinhos de um grafo esparso |
-| `VecDeque` | fila da busca em largura | permite inserção no final e remoção no início de forma eficiente |
-| `HashSet` | visitados, produtos comprados e produtos únicos | oferece verificação média próxima de `O(1)` e impede repetições |
-| `Vec` | resultados finais | permite ordenar o ranking e aplicar o limite de recomendações |
+| Estrutura   | Uso no projeto                                                | Justificativa                                                             |
+| ----------- | ------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| `HashMap`   | armazenamento dos vértices, listas de adjacência e candidatos | permite acesso médio próximo de `O(1)` por identificador                  |
+| `Vec<Edge>` | lista de arestas de cada vértice                              | é adequada para percorrer sequencialmente os vizinhos de um grafo esparso |
+| `VecDeque`  | fila da busca em largura                                      | permite inserção no final e remoção no início de forma eficiente          |
+| `HashSet`   | visitados, produtos comprados e produtos únicos               | oferece verificação média próxima de `O(1)` e impede repetições           |
+| `Vec`       | resultados finais                                             | permite ordenar o ranking e aplicar o limite de recomendações             |
 
 ## Arquitetura
 
@@ -88,17 +88,17 @@ flowchart TD
 
 Responsabilidades dos módulos:
 
-| Módulo | Responsabilidade |
-|---|---|
-| `models.rs` | define identificadores, entidades, vértices, arestas e tipos de relacionamento |
-| `graph.rs` | armazena e valida o grafo, as listas de adjacência e o índice reverso |
-| `repository.rs` | oferece operações de cadastro, consulta e conexão sobre o grafo |
-| `recommendation.rs` | executa a busca, calcula pontuações, filtra e ordena recomendações |
-| `benchmark.rs` | gera cenários sintéticos e mede os tempos de execução |
-| `error.rs` | centraliza os erros de domínio e suas mensagens |
-| `lib.rs` | expõe os módulos que formam a biblioteca `megastore` |
-| `main.rs` | monta e executa a demonstração reproduzível no terminal |
-| `examples/performance.rs` | executa as medições de desempenho em modo de release |
+| Módulo                    | Responsabilidade                                                               |
+| ------------------------- | ------------------------------------------------------------------------------ |
+| `models.rs`               | define identificadores, entidades, vértices, arestas e tipos de relacionamento |
+| `graph.rs`                | armazena e valida o grafo, as listas de adjacência e o índice reverso          |
+| `repository.rs`           | oferece operações de cadastro, consulta e conexão sobre o grafo                |
+| `recommendation.rs`       | executa a busca, calcula pontuações, filtra e ordena recomendações             |
+| `benchmark.rs`            | gera cenários sintéticos e mede os tempos de execução                          |
+| `error.rs`                | centraliza os erros de domínio e suas mensagens                                |
+| `lib.rs`                  | expõe os módulos que formam a biblioteca `megastore`                           |
+| `main.rs`                 | monta e executa a demonstração reproduzível no terminal                        |
+| `examples/performance.rs` | executa as medições de desempenho em modo de release                           |
 
 ## Organização dos arquivos
 
@@ -144,23 +144,23 @@ enum NodeId {
 
 O tipo presente no identificador impede, por exemplo, que o produto `1` seja confundido com o cliente `1`.
 
-| Vértice | Dados principais |
-|---|---|
-| Cliente | identificador e nome |
-| Produto | identificador, nome, preço e disponibilidade |
-| Categoria | identificador e nome |
+| Vértice   | Dados principais                             |
+| --------- | -------------------------------------------- |
+| Cliente   | identificador e nome                         |
+| Produto   | identificador, nome, preço e disponibilidade |
+| Categoria | identificador e nome                         |
 
 ### Arestas
 
 Cada aresta contém destino, tipo de relacionamento e peso normalizado entre `0.0` e `1.0`.
 
-| Origem | Destino | Relacionamento | Fator usado na pontuação |
-|---|---|---|---:|
-| Cliente | Produto | compra (`Purchase`) | 1,00 |
-| Cliente | Produto | interesse (`Interest`) | 0,80 |
-| Cliente | Produto | avaliação (`Rating`) | 0,90 |
-| Produto | Categoria | pertencimento (`BelongsToCategory`) | 0,60 |
-| Produto | Produto | similaridade (`Similarity`) | 1,00 |
+| Origem  | Destino   | Relacionamento                      | Fator usado na pontuação |
+| ------- | --------- | ----------------------------------- | -----------------------: |
+| Cliente | Produto   | compra (`Purchase`)                 |                     1,00 |
+| Cliente | Produto   | interesse (`Interest`)              |                     0,80 |
+| Cliente | Produto   | avaliação (`Rating`)                |                     0,90 |
+| Produto | Categoria | pertencimento (`BelongsToCategory`) |                     0,60 |
+| Produto | Produto   | similaridade (`Similarity`)         |                     1,00 |
 
 O grafo mantém:
 
@@ -307,11 +307,11 @@ O gerador cria cenários sintéticos determinísticos. A medição separa:
 ### Resultados obtidos
 
 | Produtos | Vértices | Arestas | Candidatos | Construção (ms) | Consulta (µs) | Recomendação (ms) |
-|---:|---:|---:|---:|---:|---:|---:|
-| 100 | 111 | 229 | 99 | 0,149 | 0,000 | 0,068 |
-| 1.000 | 1.110 | 2.299 | 210 | 0,974 | 0,000 | 0,112 |
-| 10.000 | 11.100 | 22.999 | 312 | 11,011 | 0,100 | 0,210 |
-| 100.000 | 111.000 | 229.999 | 310 | 170,179 | 0,200 | 0,394 |
+| -------: | -------: | ------: | ---------: | --------------: | ------------: | ----------------: |
+|      100 |      111 |     229 |         99 |           0,149 |         0,000 |             0,068 |
+|    1.000 |    1.110 |   2.299 |        210 |           0,974 |         0,000 |             0,112 |
+|   10.000 |   11.100 |  22.999 |        312 |          11,011 |         0,100 |             0,210 |
+|  100.000 |  111.000 | 229.999 |        310 |         170,179 |         0,200 |             0,394 |
 
 Esses valores correspondem a uma execução observada e podem variar conforme processador, sistema operacional, carga da máquina e versão do compilador. Os valores `0,000 µs` indicam que o tempo ficou abaixo da resolução apresentada, e não que a operação tenha custo literalmente nulo.
 
@@ -371,7 +371,7 @@ ID: 102 | Mouse sem fio | Categoria: Acessorios | Pontuacao: 0.4624 | Motivo: in
 
 ## Vídeo pitch
 
-Link: **[INSERIR LINK DO VÍDEO PITCH]**
+Link: **[Vídeo pitch](https://www.youtube.com/watch?v=hovBg8_coWA)**
 
 ## Autor
 
